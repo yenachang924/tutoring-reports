@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}요청 확인{% endblock %}
+{% block content %}
+<section class="panel empty-state">
+  <p class="eyebrow">PLEASE CHECK</p>
+  <h1>요청을 확인해주세요.</h1>
+  <p role="alert">{{ message }}</p>
+  <a href="/students" class="button primary">학생 수업 기록으로</a>
+</section>
+{% endblock %}

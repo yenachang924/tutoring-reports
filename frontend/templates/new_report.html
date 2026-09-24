@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}보고서 작성{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">TEACHER'S NOTE</p>
+    <h1>오늘의 수업을 남겨주세요.</h1>
+    <p class="subtitle">배운 내용과 다음 수업까지의 과제를 학생에게 전해요.</p>
+  </div>
+  <span class="heading-tag">새 보고서</span>
+</div>
+{% if error %}
+<div class="notice error" role="alert"><strong>입력 내용을 확인해주세요.</strong> {{ error }}
+</div>
+{% endif %}
+<form action="/reports" method="post" class="report-form">
+  <section class="panel">
+    <div class="section-heading"><span class="step">01</span>
+      <div>
+        <h2>수업 정보</h2>
+        <p>누구와 함께한 수업인가요?</p>
+      </div>
+      <span class="required-note">* 필수 입력</span>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="lesson_id">수업 선택 <span>*</span></label>
+        <select id="lesson_id" name="lesson_id" required>
+          <option value="">수업을 선택해주세요</option>
+          {% for lesson in lessons %}
+          <option value="{{ lesson.id }}" {% if values.get('lesson_id', '')|string == lesson.id|string %}selected{% endif %}>{{ lesson.student_name }} · 주 선생님 {{ lesson.main_teacher_name }} · 수업 #{{ lesson.id }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="teacher_id">작성 선생님 <span>*</span></label>
+        <select id="teacher_id" name="teacher_id" required>
+          <option value="">선생님을 선택해주세요</option>
+          {% for teacher in teachers %}
+          <option value="{{ teacher.id }}" {% if values.get('teacher_id', '')|string == teacher.id|string %}selected{% endif %}>{{ teacher.name }}{% if teacher.is_ontact %} · 온택트{% endif %}</option>
+          {% endfor %}
+        </select>
+        <small>체험용 선택입니다. 주·보충 역할은 선택한 수업에 따라 결정됩니다.</small>
+      </div>
+      <div class="field full-width">
+        <label for="lesson_type">수업 종류 <span>*</span></label>
+        <select id="lesson_type" name="lesson_type" required>
+          <option value="regular" {% if values.get('lesson_type', 'regular') == 'regular' %}selected{% endif %}>정규 수업</option>
+          <option value="supplementary" {% if values.get('lesson_type') == 'supplementary' %}selected{% endif %}>보충 수업</option>
+          <option value="ontact" {% if values.get('lesson_type') == 'ontact' %}selected{% endif %}>온택트 수업</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="started_at">시작 시간 <span>*</span></label>
+        <input type="datetime-local" id="started_at" name="started_at" value="{{ values.get('started_at', '') }}" required>
+      </div>
+      <div class="field">
+        <label for="ended_at">종료 시간 <span>*</span></label>
+        <input type="datetime-local" id="ended_at" name="ended_at" value="{{ values.get('ended_at', '') }}" required>
+        <small>시작 시간보다 늦은 시간을 입력해주세요. (한국 시간)</small>
+      </div>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="section-heading"><span class="step">02</span>
+      <div>
+        <h2>배움의 기록</h2>
+        <p>학생이 다시 꺼내볼 수 있도록 구체적으로 적어주세요.</p>
+      </div>
+    </div>
+    <div class="field">
+      <label for="report_content">수업 보고서 <span>*</span></label>
+      <textarea id="report_content" name="report_content" rows="6" maxlength="10000" placeholder="오늘 배운 내용, 학생의 이해도, 다음에 짚어볼 부분을 기록해주세요." required>{{ values.get('report_content', '') }}</textarea>
+    </div>
+    <div class="field homework">
+      <label for="homework_content">숙제 <span class="optional">선택</span></label>
+      <textarea id="homework_content" name="homework_content" rows="3" maxlength="10000" placeholder="다음 수업까지 해올 과제를 적어주세요.">{{ values.get('homework_content', '') }}</textarea>
+    </div>
+  </section>
+  <div class="form-bottom">
+    <p>온택트 자격이 없는 주 선생님의 정규 보고서만 완료 횟수에 반영돼요.<br>보충·온택트 선생님은 정규를 선택해도 횟수가 늘어나지 않아요.</p>
+    <button type="submit" class="button primary">보고서 저장 <span aria-hidden="true">↗</span></button>
+  </div>
+</form>
+<script src="{{ url_for('static', path='report-form.js') }}" defer></script>
+{% endblock %}
