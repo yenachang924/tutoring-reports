@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}강쌤과외{% endblock %} · 수업 기록</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 바로가기</a>
+    <aside class="sidebar">
+      <a class="brand" href="/students"><span class="brand-symbol" aria-hidden="true">강</span><span>강쌤과외
+      <small>LESSON JOURNAL</small></span></a>
+      <p class="nav-caption">수업 관리</p>
+      <nav aria-label="주 메뉴">
+        <a href="/reports/new" {% if request.url.path == '/reports/new' %}aria-current="page"{% endif %}><span aria-hidden="true">＋</span> 보고서 작성</a>
+        <a href="/students" {% if request.url.path == '/students' %}aria-current="page"{% endif %}><span aria-hidden="true">▤</span> 학생 수업 기록</a>
+      </nav>
+      <div class="sidebar-note"><span class="note-dot"></span> 차곡차곡 쌓이는 배움
+        <p>오늘의 수업이<br>내일의 성장으로 이어집니다.</p>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><span>우리의 배움을 기록하는 공간</span><span class="demo-badge">체험용 MVP</span></header>
+      <main id="main" tabindex="-1">{% block content %}{% endblock %}</main>
+      <footer>로그인 없는 체험 환경입니다. 학생과 선생님을 선택해 기능을 확인할 수 있습니다.</footer>
+    </div>
+  </body>
+</html>
